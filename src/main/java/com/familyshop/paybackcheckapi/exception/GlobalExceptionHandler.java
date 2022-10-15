@@ -15,9 +15,16 @@ import java.util.Date;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(MongoCommandException.class)
-    public ResponseEntity handleMongoException(MongoCommandException e) {
+    public ResponseEntity<Response<ExceptionResponse>> handleMongoException(MongoCommandException e) {
         ExceptionResponse errorResponse = new ExceptionResponse(e.getErrorCodeName(),e.getErrorMessage(), new Date().toString());
         Response<ExceptionResponse> response = new Response<>(e.getErrorCode(), errorResponse);
-        return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Response<ExceptionResponse>> handleIllegalArgumentException(IllegalArgumentException e) {
+        ExceptionResponse errorResponse = new ExceptionResponse(e.toString(), e.getMessage(), new Date().toString());
+        Response<ExceptionResponse> response = new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), errorResponse);
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
