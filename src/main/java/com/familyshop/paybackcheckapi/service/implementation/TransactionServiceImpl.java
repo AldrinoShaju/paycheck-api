@@ -56,12 +56,12 @@ public class TransactionServiceImpl implements TransactionService {
                         newTotalPayable = newTotalPayable + txn.getPayable();
                         customer.setTotalPayable(newTotalPayable);
                     }
+                    txn.setUpdatedOn(String.valueOf(System.currentTimeMillis()));
                     break;
                 }
             }
+            repository.save(customer);
         }
-
-        repository.save(customer);
     }
 
     @Override
@@ -79,9 +79,9 @@ public class TransactionServiceImpl implements TransactionService {
             txn.setUpdatedOn(String.valueOf(System.currentTimeMillis()));
 
             customer.getTxnList().add(txn);
-        }
 
-        repository.save(customer);
+            repository.save(customer);
+        }
     }
 
     @Override
@@ -94,13 +94,11 @@ public class TransactionServiceImpl implements TransactionService {
                 if(txn.getTxnId().equals(txnId)) {
                     txn.setPayable(txn.getPayable() - payedAmount);
                     customer.setTotalPayable(customer.getTotalPayable() - payedAmount);
+                    txn.setUpdatedOn(String.valueOf(System.currentTimeMillis()));
                     break;
                 }
             }
+            repository.save(customer);
         }
-
-        repository.save(customer);
-
-
     }
 }
