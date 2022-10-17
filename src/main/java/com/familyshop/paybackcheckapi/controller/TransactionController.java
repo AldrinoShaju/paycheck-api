@@ -49,6 +49,13 @@ public class TransactionController {
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
 
+    @PatchMapping("settle")
+    public ResponseEntity settleTransactions(@RequestParam String custId, int payedAmount) {
+        transactionService.settleTransactionsInOrder(custId, payedAmount);
+        Response<String> response = new Response<>(HttpStatus.CREATED.value(), "Some Pending payments are settled for custId"+custId);
+        return new ResponseEntity(response, HttpStatus.CREATED);
+    }
+
     @DeleteMapping
     public ResponseEntity deleteTransactionById(@RequestParam("id") String id) {
         Response<String> response = new Response<>(HttpStatus.FORBIDDEN.value(), "Not allowed to delete transactions");

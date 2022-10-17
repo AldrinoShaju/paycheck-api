@@ -101,4 +101,30 @@ public class TransactionServiceImpl implements TransactionService {
             repository.save(customer);
         }
     }
+
+    @Override
+    public void settleTransactionsInOrder(String custId, int payedAmount) {
+        Customer customer = customerService.getCustomer(custId);
+        int amount = payedAmount;
+        if(customer!=null) {
+            customer.setTotalPayable(customer.getTotalPayable() - amount);
+
+            for(Transaction txn:customer.getTxnList()) {
+                if(amount<=0) {
+                    break;
+                }
+
+                if(txn.getPayable()>0) {
+                    amount = amount - txn.getPayable();
+                    if(amount>=0) {
+                        txn.setPayable(0);
+                    }else {
+                        txn.setPayable(Math.abs(amount));
+                    }
+                }
+            }
+
+            repository.save(customer);
+        }
+    }
 }
