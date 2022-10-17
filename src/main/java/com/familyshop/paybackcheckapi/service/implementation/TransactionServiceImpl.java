@@ -22,7 +22,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     @Override
-    public Transaction getTranactionById(String custId, String txnId) {
+    public Transaction getTransactionById(String custId, String txnId) {
         Customer customer = customerService.getCustomer(custId);
         if(customer!=null) {
             List<Transaction> txnList = customer.getTxnList();

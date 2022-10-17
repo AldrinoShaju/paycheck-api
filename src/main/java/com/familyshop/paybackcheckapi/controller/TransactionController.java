@@ -18,7 +18,7 @@ public class TransactionController {
 
     @GetMapping
     public ResponseEntity getTransactionById(@RequestParam("id") String txnId, @RequestParam String custId) {
-        Transaction txn = transactionService.getTranactionById(custId, txnId);
+        Transaction txn = transactionService.getTransactionById(custId, txnId);
         Response<Transaction> response = new Response<>(HttpStatus.OK.value(), txn);
 
         return new ResponseEntity(response, HttpStatus.OK);
