@@ -18,7 +18,7 @@ public class TransactionController {
 
     @GetMapping
     public ResponseEntity getTransactionById(@RequestParam("id") String txnId, @RequestParam String custId) {
-        Transaction txn = transactionService.getTranactionById(custId, txnId);
+        Transaction txn = transactionService.getTransactionById(custId, txnId);
         Response<Transaction> response = new Response<>(HttpStatus.OK.value(), txn);
 
         return new ResponseEntity(response, HttpStatus.OK);
@@ -46,6 +46,13 @@ public class TransactionController {
                                                      @RequestParam String txnId, @RequestParam int payed) {
         transactionService.updateTransactionPayed(custId, txnId, payed);
         Response<String> response = new Response<>(HttpStatus.CREATED.value(), "Updated txn "+txnId);
+        return new ResponseEntity(response, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("settle")
+    public ResponseEntity settleTransactions(@RequestParam String custId, int payedAmount) {
+        transactionService.settleTransactionsInOrder(custId, payedAmount);
+        Response<String> response = new Response<>(HttpStatus.CREATED.value(), "Some Pending payments are settled for custId"+custId);
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
 
