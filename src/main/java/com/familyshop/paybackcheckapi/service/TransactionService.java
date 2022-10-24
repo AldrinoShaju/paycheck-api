@@ -10,4 +10,6 @@ public interface TransactionService {
     void addTransaction(String custId, TransactionRequest request);
     void updateTransactionPayed(String custId, String txnId, int payedAmount);
     void settleTransactionsInOrder(String custId, int payedAmount);
+
+    void deleteTransactionsById(String custId, String txnId);
 }
