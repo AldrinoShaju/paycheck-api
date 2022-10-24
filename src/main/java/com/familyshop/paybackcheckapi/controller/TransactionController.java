@@ -57,8 +57,9 @@ public class TransactionController {
     }
 
     @DeleteMapping
-    public ResponseEntity deleteTransactionById(@RequestParam("id") String id) {
-        Response<String> response = new Response<>(HttpStatus.FORBIDDEN.value(), "Not allowed to delete transactions");
-        return new ResponseEntity(response, HttpStatus.FORBIDDEN);
+    public ResponseEntity deleteTransactionById(@RequestParam String custId, @RequestParam String txnId) {
+        transactionService.deleteTransactionsById(custId, txnId);
+        Response<String> response = new Response<>(HttpStatus.CREATED.value(), "Txn deleted");
+        return new ResponseEntity(response, HttpStatus.CREATED);
     }
 }

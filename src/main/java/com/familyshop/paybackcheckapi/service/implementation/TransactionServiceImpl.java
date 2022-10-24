@@ -6,10 +6,12 @@ import com.familyshop.paybackcheckapi.model.TransactionRequest;
 import com.familyshop.paybackcheckapi.respository.PayCheckRepo;
 import com.familyshop.paybackcheckapi.service.CustomerService;
 import com.familyshop.paybackcheckapi.service.TransactionService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -68,9 +70,11 @@ public class TransactionServiceImpl implements TransactionService {
     public void addTransaction(String custId, TransactionRequest request) {
         Customer customer = customerService.getCustomer(custId);
 
+
         if(customer!=null) {
             Transaction txn = new Transaction();
-            txn.setTxnId(String.valueOf(customer.getTxnList().size()+1));
+            ObjectId id = new ObjectId();
+            txn.setTxnId(String.valueOf(id));
             txn.setTxnNote(request.getTxnNote());
             txn.setTotalAmount(request.getTotalAmount());
             txn.setPayable(request.getTotalAmount() - request.getPayed());
@@ -123,6 +127,20 @@ public class TransactionServiceImpl implements TransactionService {
                     }
                 }
             }
+
+            repository.save(customer);
+        }
+    }
+
+    @Override
+    public void deleteTransactionsById(String custId, String txnId) {
+        Customer customer = customerService.getCustomer(custId);
+
+        if(customer!=null) {
+            List<Transaction> transactionList = customer.getTxnList();
+            List<Transaction> newTxnList = transactionList.stream().filter(txn->!(txn.getTxnId().equals(txnId))).collect(Collectors.toList());
+
+            customer.setTxnList(newTxnList);
 
             repository.save(customer);
         }
