@@ -138,11 +138,18 @@ public class TransactionServiceImpl implements TransactionService {
 
         if(customer!=null) {
             List<Transaction> transactionList = customer.getTxnList();
-            List<Transaction> newTxnList = transactionList.stream().filter(txn->!(txn.getTxnId().equals(txnId))).collect(Collectors.toList());
+            List<Transaction> collect = transactionList.stream().filter(txn -> txn.getTxnId().equals(txnId)).collect(Collectors.toList());
+            if(!collect.isEmpty()) {
+                int amt = collect.get(0).getPayable();
+                customer.setTotalPayable(customer.getTotalPayable() - amt);
 
-            customer.setTxnList(newTxnList);
+                List<Transaction> newTxnList = transactionList.stream().filter(txn->!(txn.getTxnId().equals(txnId))).collect(Collectors.toList());
 
-            repository.save(customer);
+                customer.setTxnList(newTxnList);
+
+                repository.save(customer);
+            }
+
         }
     }
 }
